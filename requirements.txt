@@ -17,6 +17,10 @@ beautifulsoup4
 python-jose[cryptography]
 passlib[bcrypt]
 bcrypt
+alembic
+
+# Procurement Bot Dependencies
+playwright
 
 # RAG & AI
 langchain
