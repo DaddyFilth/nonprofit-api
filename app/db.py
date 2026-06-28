@@ -1,12 +1,12 @@
 import os
 
-from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
-from sqlalchemy.orm import sessionmaker, declarative_base
+from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
+from sqlalchemy.orm import declarative_base
 
-# Use env var, default to local dev DB
+# Use env var, default to local SQLite DB for easy dev
 DATABASE_URL = os.environ.get(
     "DATABASE_URL",
-    "postgresql+asyncpg://localhost/nonprofit",
+    "sqlite+aiosqlite:///./nonprofit.db",
 )
 
 engine = create_async_engine(
@@ -15,10 +15,9 @@ engine = create_async_engine(
     future=True,
 )
 
-AsyncSessionLocal = sessionmaker(
-    bind=engine,
+AsyncSessionLocal = async_sessionmaker(
+    engine,
     expire_on_commit=False,
-    class_=AsyncSession,
 )
 
 Base = declarative_base()

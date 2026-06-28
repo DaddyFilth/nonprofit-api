@@ -8,14 +8,19 @@ from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from contextlib import asynccontextmanager
-from .db import get_session
+from .db import get_session, engine, Base
 from .routers import donors, donations, receipts, analytics, ui
 from .schemas.item import ItemIn
 from .services.scheduler_service import SchedulerService
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Startup: Start the scraper scheduler
+    # Startup: Create tables if using SQLite (for easy dev)
+    if engine.url.drivername == "sqlite+aiosqlite":
+        async with engine.begin() as conn:
+            await conn.run_sync(Base.metadata.create_all)
+
+    # Start the scraper scheduler
     scheduler = SchedulerService()
     scheduler.start()
     app.state.scheduler = scheduler

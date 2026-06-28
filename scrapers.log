@@ -1,0 +1,45 @@
+2026-06-28 04:11:35,623 - SchedulerService - INFO - Starting scraper scheduler (Interval: 60m)
+2026-06-28 04:11:35,625 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-06-28 04:11:35,626 - apscheduler.scheduler - INFO - Added job "main" to job store "default"
+2026-06-28 04:11:35,626 - apscheduler.scheduler - INFO - Scheduler started
+2026-06-28 04:21:02,935 - SchedulerService - INFO - Starting scraper scheduler (Interval: 60m)
+2026-06-28 04:21:02,936 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-06-28 04:21:02,937 - apscheduler.scheduler - INFO - Added job "main" to job store "default"
+2026-06-28 04:21:02,937 - apscheduler.scheduler - INFO - Scheduler started
+2026-06-28 04:23:45,509 - SchedulerService - INFO - Starting scraper scheduler (Interval: 60m)
+2026-06-28 04:23:45,510 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-06-28 04:23:45,510 - apscheduler.scheduler - INFO - Added job "main" to job store "default"
+2026-06-28 04:23:45,511 - apscheduler.scheduler - INFO - Scheduler started
+2026-06-28 05:23:45,664 - apscheduler.executors.default - INFO - Running job "main (trigger: interval[1:00:00], next run at: 2026-06-28 06:23:45 CDT)" (scheduled at 2026-06-28 05:23:45.510076-05:00)
+2026-06-28 05:23:45,704 - ScraperOrchestrator - INFO - --- Scraper Automation Cycle Started ---
+2026-06-28 05:23:45,717 - ScraperOrchestrator - INFO - Starting scraper: Craigslist Free
+2026-06-28 05:23:46,623 - ScraperOrchestrator - ERROR - Failed: Craigslist Free with exit code 1
+2026-06-28 05:23:46,624 - ScraperOrchestrator - ERROR - Error output: Traceback (most recent call last):
+  File "/home/filth/StudioProjects/nonprofit-api/scrapers/scrape_sites.py", line 7, in <module>
+    from bs4 import BeautifulSoup
+ModuleNotFoundError: No module named 'bs4'
+2026-06-28 05:23:46,624 - ScraperOrchestrator - INFO - Starting scraper: Craigslist Robot
+2026-06-28 05:23:47,274 - ScraperOrchestrator - ERROR - Failed: Craigslist Robot with exit code 1
+2026-06-28 05:23:47,274 - ScraperOrchestrator - ERROR - Error output: Traceback (most recent call last):
+  File "/home/filth/StudioProjects/nonprofit-api/scrapers/scrape_sites.py", line 7, in <module>
+    from bs4 import BeautifulSoup
+ModuleNotFoundError: No module named 'bs4'
+2026-06-28 05:23:47,274 - ScraperOrchestrator - INFO - Starting scraper: Beta Electronics
+2026-06-28 05:23:47,935 - ScraperOrchestrator - ERROR - Failed: Beta Electronics with exit code 1
+2026-06-28 05:23:47,935 - ScraperOrchestrator - ERROR - Error output: Traceback (most recent call last):
+  File "/home/filth/StudioProjects/nonprofit-api/scrapers/scrape_beta_electronics.py", line 7, in <module>
+    from bs4 import BeautifulSoup
+ModuleNotFoundError: No module named 'bs4'
+2026-06-28 05:23:47,936 - ScraperOrchestrator - INFO - Starting scraper: Crawl Free Items
+2026-06-28 05:23:48,614 - ScraperOrchestrator - ERROR - Failed: Crawl Free Items with exit code 1
+2026-06-28 05:23:48,614 - ScraperOrchestrator - ERROR - Error output: Traceback (most recent call last):
+  File "/home/filth/StudioProjects/nonprofit-api/scrapers/crawl_free_items.py", line 9, in <module>
+    from bs4 import BeautifulSoup
+ModuleNotFoundError: No module named 'bs4'
+2026-06-28 05:23:48,614 - ScraperOrchestrator - INFO - --- Scraper Automation Cycle Finished (Duration: 0:00:02.910179) ---
+2026-06-28 05:23:48,616 - apscheduler.executors.default - INFO - Job "main (trigger: interval[1:00:00], next run at: 2026-06-28 06:23:45 CDT)" executed successfully
+2026-06-28 05:31:43,189 - SchedulerService - INFO - Starting scraper scheduler (Interval: 60m)
+2026-06-28 05:31:43,192 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-06-28 05:31:43,193 - apscheduler.scheduler - INFO - Added job "main" to job store "default"
+2026-06-28 05:31:43,193 - apscheduler.scheduler - INFO - Scheduler started
+2026-06-28 05:42:00,246 - SchedulerService - INFO - Scheduler is disabled. Set ENABLE_SCHEDULER=true to enable.

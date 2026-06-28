@@ -3,6 +3,7 @@ fastapi
 uvicorn
 sqlalchemy
 asyncpg
+aiosqlite
 pydantic[email]
 pydantic-settings
 python-multipart
@@ -11,6 +12,8 @@ weasyprint
 python-dateutil
 aiosmtplib
 email-validator
+requests
+beautifulsoup4
 
 # RAG & AI
 langchain

@@ -1,6 +1,7 @@
 # Nonprofit API & AI Assistant
 
-This project combines a FastAPI-based management system for nonprofits with a RAG-powered AI Assistant.
+This project combines a FastAPI-based management system for nonprofits with a RAG-powered AI
+Assistant.
 
 ## Project Structure
 
@@ -14,7 +15,8 @@ This project combines a FastAPI-based management system for nonprofits with a RA
 - **Donor Management**: Track engagement and contributions.
 - **Automated Receipts**: Generate and email PDF receipts.
 - **Reporting & Analytics**: Financial and inventory dashboards.
-- **AI Assistant**: A RAG-powered agent that understands the codebase and can answer developer queries.
+- **AI Assistant**: A RAG-powered agent that understands the codebase and can answer developer
+  queries.
 
 ## Setup
 
@@ -61,7 +63,9 @@ The project includes an orchestrator to run multiple scrapers and ingest data in
    ```
 
 3. Integrated Scheduler:
-   The app has a built-in scheduler. Enable it with `ENABLE_SCHEDULER=true`. See [Automation Alternatives](docs/automation-alternatives.md) for details.
+   The app has a built-in scheduler. Enable it with `ENABLE_SCHEDULER=true`.
+   See [Automation Alternatives](docs/automation-alternatives.md) for details.
 
 4. Systemd Timers (Linux):
-   For a more robust Linux-native automation, see the Systemd guide in [Automation Alternatives](docs/automation-alternatives.md).
+   For a more robust Linux-native automation, see the Systemd guide
+   in [Automation Alternatives](docs/automation-alternatives.md).
