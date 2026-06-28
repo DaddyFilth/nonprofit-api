@@ -10,33 +10,30 @@ from bs4 import BeautifulSoup
 API_BASE = os.environ.get("INGEST_API_BASE", "http://127.0.0.1:8000")
 INGEST_TOKEN = os.environ.get("INGEST_TOKEN", "devtoken")
 
-# Point this at a freebie / product testing roundup page
+# Point this at a real freebie aggregator
 SOURCE_URL = os.environ.get(
     "SOURCE_URL",
-    "https://example-freebie-directory.com/product-testing-electronics"
+    "https://www.heyitsfree.net/"
 )
 
 ELECTRONICS_KEYWORDS = [
-    # generic electronics
     "headphone", "earbud", "speaker", "bluetooth", "smartwatch",
     "tablet", "laptop", "monitor", "camera", "tv", "projector",
     "gaming", "controller", "robot vacuum", "vacuum robot",
-    # air purifiers
     "air purifier", "hepa filter", "air cleaner",
-    # brand names
     "roomba", "irobot", "shark", "shark ai", "honeywell",
 ]
 
 TESTER_KEYWORDS = [
     "beta", "product tester", "test & keep", "test and keep",
     "review unit", "sample program", "product testing", "campaign",
-    "trial", "ambassador",
+    "trial", "ambassador", "freebie",
 ]
 
 
 def fetch_page(url: str) -> str:
     headers = {
-        "User-Agent": "Mozilla/5.0 (compatible; NonprofitScraper/0.1; +https://example.org)"
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
     }
     resp = requests.get(url, headers=headers, timeout=20)
     resp.raise_for_status()
@@ -54,24 +51,25 @@ def parse_items(html: str, source_url: str) -> List[Dict[str, Any]]:
     soup = BeautifulSoup(html, "html.parser")
     items: List[Dict[str, Any]] = []
 
-    container_selector = "article, .offer, li, .free-item, .campaign"
-    title_selector = "h2, h3, .title, a"
-    link_selector = "a"
-    desc_selector = "p, .description, .excerpt"
+    # Target specific post containers for thefreebieguy.com
+    container_selector = "article, .post, .ast-article-post"
+    title_selector = "h2.entry-title a, .title a"
+    desc_selector = ".entry-content p, .post-content p"
 
     for idx, block in enumerate(soup.select(container_selector)):
         title_el = block.select_one(title_selector)
-        link_el = block.select_one(link_selector)
         desc_el = block.select_one(desc_selector)
 
         if not title_el:
             continue
 
         title = title_el.get_text(strip=True)
-        raw_url = link_el.get("href") if link_el and link_el.has_attr("href") else None
-        if raw_url and raw_url.startswith("#"):
-            raw_url = None
-        if raw_url and raw_url.startswith("/"):
+        raw_url = title_el.get("href")
+
+        if not raw_url or raw_url.startswith("#"):
+            continue
+
+        if raw_url.startswith("/"):
             raw_url = urljoin(source_url, raw_url)
 
         description = desc_el.get_text(strip=True) if desc_el else ""
@@ -81,7 +79,7 @@ def parse_items(html: str, source_url: str) -> List[Dict[str, Any]]:
             continue
 
         posted_at = datetime.now(timezone.utc)
-        post_id = raw_url or f"beta-elec-row-{idx}"
+        post_id = raw_url
         item_id = f"beta_electronics::{post_id}"
 
         items.append(

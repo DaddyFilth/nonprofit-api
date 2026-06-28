@@ -11,17 +11,16 @@ from dateutil import parser as dateparser
 API_BASE = os.environ.get("INGEST_API_BASE", "http://127.0.0.1:8000")
 INGEST_TOKEN = os.environ.get("INGEST_TOKEN", "devtoken")
 
-# Example placeholder: a free-samples roundup article / directory
-# You can point this at sites like MoneyPantry, Dealhack, or similar lists.[web:192][web:198]
+# Use HeyItsFree.net as a real-world source for free samples
 SOURCE_URL = os.environ.get(
     "SOURCE_URL",
-    "https://example-freebies-directory.com/free-samples"
+    "https://www.heyitsfree.net/"
 )
 
 
 def fetch_page(url: str) -> str:
     headers = {
-        "User-Agent": "Mozilla/5.0 (compatible; NonprofitScraper/0.1; +https://example.org)"
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
     }
     resp = requests.get(url, headers=headers, timeout=20)
     resp.raise_for_status()
@@ -32,35 +31,40 @@ def parse_items(html: str) -> List[Dict[str, Any]]:
     soup = BeautifulSoup(html, "html.parser")
     items: List[Dict[str, Any]] = []
 
-    # TODO: adjust selectors to match your chosen directory:
-    # many "freebie list" posts use <article>, <li>, or <div class="offer">
-    container_selector = "article, .offer, li.freebie, .free-item"
-    title_selector = "h2, h3, .title, a"
-    link_selector = "a"
-    desc_selector = "p, .description, .excerpt"
+    # Selectors for heyitsfree.net (WordPress based)
+    container_selector = "article.post, .post"
+    title_selector = "h2.entry-title a, .title a"
+    desc_selector = ".entry-summary p, .entry-content p"
+    time_selector = "time.entry-date"
 
     for idx, block in enumerate(soup.select(container_selector)):
         title_el = block.select_one(title_selector)
-        link_el = block.select_one(link_selector)
         desc_el = block.select_one(desc_selector)
+        time_el = block.select_one(time_selector)
 
         if not title_el:
             continue
 
         title = title_el.get_text(strip=True)
-        raw_url: Optional[str] = (
-            link_el.get("href") if link_el and link_el.has_attr("href") else None
-        )
-        if raw_url and raw_url.startswith("#"):
-            raw_url = None
-        if raw_url and raw_url.startswith("/"):
+        raw_url = title_el.get("href")
+
+        if not raw_url or raw_url.startswith("#"):
+            continue
+
+        if raw_url.startswith("/"):
             raw_url = urljoin(SOURCE_URL, raw_url)
 
         description = desc_el.get_text(strip=True) if desc_el else ""
 
-        posted_at = datetime.now(timezone.utc)
+        posted_raw = time_el.get("datetime") if time_el and time_el.has_attr("datetime") else None
+        try:
+            posted_at = dateparser.isoparse(posted_raw) if posted_raw else datetime.now(timezone.utc)
+            if posted_at.tzinfo is None:
+                posted_at = posted_at.replace(tzinfo=timezone.utc)
+        except Exception:
+            posted_at = datetime.now(timezone.utc)
 
-        post_id = raw_url or f"row-{idx}"
+        post_id = raw_url
         item_id = f"samples_dir::{post_id}"
 
         items.append(

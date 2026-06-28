@@ -39,24 +39,24 @@ SITE_CONFIGS: Dict[str, Dict[str, Any]] = {
     },
     "freecycle_like": {
         "source": "freecycle_like",
-        "default_url": "https://example-freecycle.org/group/lawton/listings",
-        "container": ".listing, .post, article, li.result",
-        "title": ".title, h2 a, h3 a",
-        "link": "a",
-        "desc": ".description, p, .body",
-        "location": ".location, .town, .city",
+        "default_url": "https://trashnothing.com/beta/lawton-ok-freecycle",
+        "container": "div.post-card, .listing, .post",
+        "title": ".post-title, .title, h2 a",
+        "link": "a.post-link, a",
+        "desc": ".post-content, .description, p",
+        "location": ".post-location, .location",
         "time": "time[datetime]",
         "category": "general",
     },
     "samples_directory": {
         "source": "samples_directory",
-        "default_url": "https://moneypantry.com/websites-to-get-free-stuff/",
-        "container": "article, .offer, li.freebie, .free-item",
-        "title": "h2, h3, .title, a",
-        "link": "a",
-        "desc": "p, .description, .excerpt",
+        "default_url": "https://www.heyitsfree.net/",
+        "container": "article.post",
+        "title": "h2.entry-title a",
+        "link": "h2.entry-title a",
+        "desc": ".entry-summary p, .entry-content p",
         "location": "",
-        "time": "",
+        "time": "time.entry-date",
         "category": "samples",
     },
 }
@@ -64,7 +64,7 @@ SITE_CONFIGS: Dict[str, Dict[str, Any]] = {
 
 def fetch_page(url: str) -> str:
     headers = {
-        "User-Agent": "Mozilla/5.0 (compatible; NonprofitScraper/0.1; +https://example.org)"
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
     }
     resp = requests.get(url, headers=headers, timeout=20)
     resp.raise_for_status()

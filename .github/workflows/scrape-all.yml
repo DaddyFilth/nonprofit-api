@@ -10,11 +10,11 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      INGEST_API_BASE: https://your-api-domain.example.org
+      INGEST_API_BASE: ${{ secrets.INGEST_API_BASE }}
       INGEST_TOKEN: ${{ secrets.INGEST_TOKEN }}
-      # Optional URLs for configurable sites
-      FREECYCLE_URL: https://example-freecycle.org/group/lawton/listings
-      SAMPLES_DIR_URL: https://moneypantry.com/websites-to-get-free-stuff/
+      # Real URLs for Lawton, OK and reputable freebie sites
+      FREECYCLE_URL: https://trashnothing.com/beta/lawton-ok-freecycle
+      SAMPLES_DIR_URL: https://www.heyitsfree.net/
       START_URL: https://lawton.craigslist.org/d/free-stuff/search/zip
 
     steps:
