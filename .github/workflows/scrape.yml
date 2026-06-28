@@ -10,9 +10,9 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      INGEST_API_BASE: https://your-api-domain.example.org
+      INGEST_API_BASE: ${{ secrets.INGEST_API_BASE }}
       INGEST_TOKEN: ${{ secrets.INGEST_TOKEN }}
-      # SOURCE_URL: https://example.com/free-stuff
+      # SOURCE_URL: https://thefreebieguy.com/category/freebies/
 
     steps:
       - name: Checkout repo

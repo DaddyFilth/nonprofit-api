@@ -11,16 +11,16 @@ from dateutil import parser as dateparser
 API_BASE = os.environ.get("INGEST_API_BASE", "http://127.0.0.1:8000")
 INGEST_TOKEN = os.environ.get("INGEST_TOKEN", "devtoken")
 
-# Example placeholder: replace with an actual Freecycle/local free board URL
+# Real target for Lawton, OK via TrashNothing (Freecycle interface)
 SOURCE_URL = os.environ.get(
     "SOURCE_URL",
-    "https://example-freecycle.org/group/lawton/listings"
+    "https://trashnothing.com/beta/lawton-ok-freecycle"
 )
 
 
 def fetch_page(url: str) -> str:
     headers = {
-        "User-Agent": "Mozilla/5.0 (compatible; NonprofitScraper/0.1; +https://example.org)"
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
     }
     resp = requests.get(url, headers=headers, timeout=20)
     resp.raise_for_status()
@@ -31,12 +31,12 @@ def parse_items(html: str) -> List[Dict[str, Any]]:
     soup = BeautifulSoup(html, "html.parser")
     items: List[Dict[str, Any]] = []
 
-    # TODO: Adjust these selectors to match the actual group's HTML
-    container_selector = ".listing, .post, article, li.result"
-    title_selector = ".title, h2 a, h3 a"
-    link_selector = "a"
-    desc_selector = ".description, p, .body"
-    location_selector = ".location, .town, .city"
+    # Selectors for TrashNothing beta UI
+    container_selector = "div.post-card, .listing, .post"
+    title_selector = ".post-title, .title"
+    link_selector = "a.post-link, a"
+    desc_selector = ".post-content, .description"
+    location_selector = ".post-location, .location"
     time_selector = "time[datetime]"
 
     for idx, card in enumerate(soup.select(container_selector)):

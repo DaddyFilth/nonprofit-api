@@ -24,7 +24,7 @@ KEYWORDS = ["robot vacuum", "robovac", "roomba", "vacuum robot"]
 
 def fetch_page(url: str) -> str:
     headers = {
-        "User-Agent": "Mozilla/5.0 (compatible; NonprofitScraper/0.1; +https://example.org)"
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
     }
     resp = requests.get(url, headers=headers, timeout=20)
     resp.raise_for_status()

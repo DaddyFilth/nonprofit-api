@@ -20,10 +20,10 @@ INGEST_API_BASE = os.environ.get("INGEST_API_BASE", "http://localhost:8000")
 INGEST_TOKEN = os.environ.get("INGEST_TOKEN", "testtoken")
 
 SCRAPERS = [
-    {"name": "Craigslist Free", "command": ["python3", "scrapers/scrape_sites.py"], "env": {"SITE": "craigslist_free"}},
-    {"name": "Craigslist Robot", "command": ["python3", "scrapers/scrape_sites.py"], "env": {"SITE": "craigslist_robot"}},
-    {"name": "Beta Electronics", "command": ["python3", "scrapers/scrape_beta_electronics.py"]},
-    {"name": "Crawl Free Items", "command": ["python3", "scrapers/crawl_free_items.py"], "env": {"MAX_DEPTH": "1", "MAX_PAGES": "10"}},
+    {"name": "Craigslist Free", "command": [sys.executable, "scrapers/scrape_sites.py"], "env": {"SITE": "craigslist_free"}},
+    {"name": "Craigslist Robot", "command": [sys.executable, "scrapers/scrape_sites.py"], "env": {"SITE": "craigslist_robot"}},
+    {"name": "Beta Electronics", "command": [sys.executable, "scrapers/scrape_beta_electronics.py"]},
+    {"name": "Crawl Free Items", "command": [sys.executable, "scrapers/crawl_free_items.py"], "env": {"MAX_DEPTH": "1", "MAX_PAGES": "10"}},
 ]
 
 def run_scraper(scraper):

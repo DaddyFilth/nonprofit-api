@@ -29,11 +29,20 @@ class AnalyticsService:
         if not end_date:
             end_date = get_utc_now()
         
+        # Ensure dates are naive for comparison
+        if start_date.tzinfo:
+            start_date = start_date.replace(tzinfo=None)
+        if end_date.tzinfo:
+            end_date = end_date.replace(tzinfo=None)
+
         # Check cache first
         cache_key = f"dashboard_{start_date.date()}_{end_date.date()}"
         cached = await self._get_cached_analytics(cache_key)
         if cached:
-            return DashboardMetrics(**cached)
+            try:
+                return DashboardMetrics(**cached)
+            except Exception:
+                pass # Fallback to calculation if cache is corrupted
         
         # Calculate metrics
         metrics_dict = await self._calculate_dashboard_metrics(start_date, end_date)
@@ -62,7 +71,7 @@ class AnalyticsService:
         total_donors_result = await self.session.execute(
             select(func.count(Donor.id))
         )
-        total_donors = total_donors_result.scalar()
+        total_donors = total_donors_result.scalar() or 0
         
         # Active donors (donated in last 30 days)
         thirty_days_ago = get_utc_now() - timedelta(days=30)
@@ -74,7 +83,7 @@ class AnalyticsService:
                 )
             )
         )
-        active_donors = active_donors_result.scalar()
+        active_donors = active_donors_result.scalar() or 0
         
         # Total donations and revenue
         revenue_result = await self.session.execute(
@@ -84,8 +93,8 @@ class AnalyticsService:
             )
         )
         revenue_data = revenue_result.first()
-        total_donations = revenue_data.count or 0
-        total_revenue = (revenue_data.total or 0) / 100  # Convert cents to dollars
+        total_donations = (revenue_data.count if revenue_data else 0) or 0
+        total_revenue = ((revenue_data.total if revenue_data else 0) or 0) / 100  # Convert cents to dollars
         
         # Average donation
         avg_donation = total_revenue / total_donations if total_donations > 0 else 0
@@ -186,7 +195,11 @@ class AnalyticsService:
         if not donor.first_donation_date or not donor.last_donation_date:
             return "unknown"
         
-        days_between = (donor.last_donation_date - donor.first_donation_date).days
+        # Ensure naive for comparison
+        d1 = donor.first_donation_date.replace(tzinfo=None)
+        d2 = donor.last_donation_date.replace(tzinfo=None)
+
+        days_between = (d2 - d1).days
         if days_between <= 0:
             return "unknown"
         
@@ -219,10 +232,13 @@ class AnalyticsService:
         end_date: datetime
     ) -> FinancialSummary:
         """Generate financial summary report"""
-        
-        # This would query actual donation/expense tables
-        # For now, returning a simplified version
-        
+
+        # Ensure naive
+        if start_date.tzinfo:
+            start_date = start_date.replace(tzinfo=None)
+        if end_date.tzinfo:
+            end_date = end_date.replace(tzinfo=None)
+
         revenue_result = await self.session.execute(
             select(func.sum(Donor.total_value)).where(
                 and_(
@@ -249,6 +265,12 @@ class AnalyticsService:
     ) -> InventoryReport:
         """Generate inventory analytics report"""
         
+        # Ensure naive
+        if start_date.tzinfo:
+            start_date = start_date.replace(tzinfo=None)
+        if end_date.tzinfo:
+            end_date = end_date.replace(tzinfo=None)
+
         try:
             result = await self.session.execute(
                 text("""
@@ -287,12 +309,18 @@ class AnalyticsService:
             items_distributed_this_period=0,
             items_expired_this_period=0
         )
-    
+
     async def get_donations_report(self, start_date: datetime, end_date: datetime) -> str:
         """Generate a CSV report of all donations in the period"""
         import csv
         import io
         from app.models.donation import Donation
+
+        # Ensure naive
+        if start_date.tzinfo:
+            start_date = start_date.replace(tzinfo=None)
+        if end_date.tzinfo:
+            end_date = end_date.replace(tzinfo=None)
 
         query = select(Donation, Donor).join(Donor).where(
             and_(
@@ -321,13 +349,16 @@ class AnalyticsService:
 
     async def _get_cached_analytics(self, cache_key: str) -> Optional[Dict[str, Any]]:
         """Retrieve cached analytics if valid"""
-        result = await self.session.execute(
-            select(AnalyticsCache).where(AnalyticsCache.cache_key == cache_key)
-        )
-        cache = result.scalar_one_or_none()
-        
-        if cache and not cache.is_expired():
-            return cache.data
+        try:
+            result = await self.session.execute(
+                select(AnalyticsCache).where(AnalyticsCache.cache_key == cache_key)
+            )
+            cache = result.scalar_one_or_none()
+
+            if cache and not cache.is_expired():
+                return cache.data
+        except Exception:
+            pass
         return None
     
     async def _cache_analytics(

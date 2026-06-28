@@ -9,4 +9,8 @@ reports/*.csv
 nonprofit-api-local/
 .env
 *.log
+<<<<<<< HEAD
 procurement_bot.log
+=======
+*.db
+>>>>>>> bd162b6f5df6444fdb363356d4a315332092e536
