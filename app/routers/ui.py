@@ -20,7 +20,11 @@ async def login_page(request: Request, error: str = None):
     user = await AuthService.get_current_user(request)
     if user:
         return RedirectResponse(url="/dashboard")
-    return templates.TemplateResponse("dashboard/login.html", {"request": request, "error": error})
+    return templates.TemplateResponse(
+        request=request,
+        name="dashboard/login.html",
+        context={"error": error}
+    )
 
 @router.post("/login")
 async def login(username: str = Form(...), password: str = Form(...)):

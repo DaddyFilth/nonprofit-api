@@ -8,3 +8,5 @@ receipts/*.html
 reports/*.csv
 nonprofit-api-local/
 .env
+*.log
+*.db
