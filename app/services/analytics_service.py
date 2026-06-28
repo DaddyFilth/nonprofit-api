@@ -11,7 +11,7 @@ import json
 import uuid
 
 def get_utc_now():
-    return datetime.now(timezone.utc)
+    return datetime.now(timezone.utc).replace(tzinfo=None) # Use naive UTC for DB compatibility
 
 class AnalyticsService:
     def __init__(self, session: AsyncSession):
@@ -36,12 +36,20 @@ class AnalyticsService:
             return DashboardMetrics(**cached)
         
         # Calculate metrics
-        metrics = await self._calculate_dashboard_metrics(start_date, end_date)
+        metrics_dict = await self._calculate_dashboard_metrics(start_date, end_date)
+        metrics = DashboardMetrics(**metrics_dict)
         
-        # Cache results
-        await self._cache_analytics(cache_key, metrics, expire_minutes=15)
+        # Cache results (serialize to JSON-compatible format)
+        try:
+            await self._cache_analytics(
+                cache_key,
+                json.loads(metrics.model_dump_json()),
+                expire_minutes=15
+            )
+        except Exception as e:
+            print(f"CACHE ERROR: {e}")
         
-        return DashboardMetrics(**metrics)
+        return metrics
     
     async def _calculate_dashboard_metrics(
         self,
@@ -329,6 +337,16 @@ class AnalyticsService:
         expire_minutes: int
     ):
         """Cache analytics results"""
+        from sqlalchemy import delete
+
+        # Cleanup existing cache for this key
+        try:
+            await self.session.execute(
+                delete(AnalyticsCache).where(AnalyticsCache.cache_key == cache_key)
+            )
+        except Exception:
+            pass
+
         expires_at = get_utc_now() + timedelta(minutes=expire_minutes)
         
         cache = AnalyticsCache(
