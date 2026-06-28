@@ -8,7 +8,7 @@ from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from .db import get_session
-
+from .routers import donors, donations, receipts, analytics
 
 class LocationIn(BaseModel):
     city: Optional[str] = None
@@ -29,6 +29,12 @@ class ItemIn(BaseModel):
 
 
 app = FastAPI(title="Nonprofit Ingest API")
+
+# Include routers
+app.include_router(donors.router)
+app.include_router(donations.router)
+app.include_router(receipts.router)
+app.include_router(analytics.router)
 
 security = HTTPBearer(auto_error=False)
 

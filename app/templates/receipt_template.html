@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Donation Receipt</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            max-width: 800px; 
+            margin: 0 auto; 
+            padding: 20px; 
+            background-color: #f9f9f9;
+        }
+        .receipt-container {
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .header { 
+            text-align: center; 
+            margin-bottom: 30px; 
+            border-bottom: 2px solid #4CAF50;
+            padding-bottom: 20px;
+        }
+        .receipt-number { 
+            font-size: 18px; 
+            font-weight: bold; 
+            color: #333; 
+            margin-bottom: 10px;
+        }
+        .organization { 
+            font-size: 24px; 
+            font-weight: bold; 
+            margin-bottom: 10px; 
+            color: #2e7d32;
+        }
+        .section { 
+            margin-bottom: 25px; 
+        }
+        .label { 
+            font-weight: bold; 
+            color: #555;
+        }
+        .amount { 
+            font-size: 32px; 
+            font-weight: bold; 
+            color: #2e7d32;
+            margin: 15px 0;
+        }
+        .footer { 
+            margin-top: 40px; 
+            text-align: center; 
+            font-size: 12px; 
+            color: #666; 
+            border-top: 1px solid #ddd;
+            padding-top: 20px;
+        }
+        .donor-info {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        .thank-you {
+            text-align: center;
+            font-style: italic;
+            color: #666;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="receipt-container">
+        <div class="header">
+            <div class="organization">{{ organization_name }}</div>
+            <div>{{ organization_address }}</div>
+            {% if tax_id %}
+            <div style="margin-top: 10px;">Tax ID: {{ tax_id }}</div>
+            {% endif %}
+        </div>
+        
+        <div class="section">
+            <div class="receipt-number">Receipt #{{ receipt_number }}</div>
+            <div>Date: {{ receipt_date }}</div>
+        </div>
+        
+        <div class="donor-info">
+            <div class="section">
+                <div><span class="label">Donor:</span> {{ donor_name }}</div>
+                <div>{{ donor_address }}</div>
+                <div>{{ donor_city }}, {{ donor_state }} {{ donor_zip }}</div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div><span class="label">Donation Date:</span> {{ donation_date }}</div>
+            <div><span class="label">Amount:</span> <span class="amount">${{ amount_dollars }}</span></div>
+        </div>
+        
+        <div class="thank-you">
+            <p>Thank you for your generous support of our mission!</p>
+        </div>
+        
+        <div class="footer">
+            <p>This receipt confirms your tax-deductible donation to {{ organization_name }}.</p>
+            <p>Please retain this document for your tax records.</p>
+            <p>© {{ current_year }} {{ organization_name }}</p>
+        </div>
+    </div>
+</body>
+</html>

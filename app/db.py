@@ -1,7 +1,7 @@
 import os
 
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, declarative_base
 
 # Use env var, default to local dev DB
 DATABASE_URL = os.environ.get(
@@ -20,6 +20,8 @@ AsyncSessionLocal = sessionmaker(
     expire_on_commit=False,
     class_=AsyncSession,
 )
+
+Base = declarative_base()
 
 
 async def get_session() -> AsyncSession:
