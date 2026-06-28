@@ -27,6 +27,10 @@ class EmailService:
     ) -> bool:
         """Send receipt email with PDF attachment"""
         
+        if not self.smtp_password or not self.smtp_username:
+            print("Email service not configured: Missing SMTP credentials")
+            return False
+
         try:
             message = MIMEMultipart()
             message["From"] = f"{self.from_name} <{self.from_email}>"

@@ -9,24 +9,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from .db import get_session
 from .routers import donors, donations, receipts, analytics
-
-class LocationIn(BaseModel):
-    city: Optional[str] = None
-    lat: Optional[float] = None
-    lon: Optional[float] = None
-
-
-class ItemIn(BaseModel):
-    id: str
-    source: str
-    title: str
-    description: str = ""
-    category: str
-    location: LocationIn
-    raw_url: Optional[HttpUrl] = None
-    posted_at: datetime
-    expires_at: Optional[datetime] = None
-
+from .schemas.item import ItemIn
 
 app = FastAPI(title="Nonprofit Ingest API")
 
@@ -44,11 +27,15 @@ def verify_token(creds: HTTPAuthorizationCredentials | None) -> None:
 
     expected = os.environ.get("INGEST_TOKEN")
     if not expected:
-        return
+        # Deny access if INGEST_TOKEN is not configured (security by default)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Ingest token not configured on server",
+        )
     if not creds or creds.scheme.lower() != "bearer" or creds.credentials != expected:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid token",
+            detail="Invalid or missing token",
         )
 
 
