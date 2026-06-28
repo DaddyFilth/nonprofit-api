@@ -11,12 +11,12 @@ embeddings = OpenAIEmbeddings()
 project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 persist_directory = os.path.join(project_root, "chroma_db")
 
+# Inside tools.py
 vectorstore = Chroma(
-    collection_name="nonprofit_codebase", # Defaulting to a sensible name
-    persist_directory=persist_directory,
+    collection_name="nonprofit_api_collection",
+    persist_directory="/home/filth/nonprofit-api-rag/chroma_db",
     embedding_function=embeddings
 )
-
 # 3. Create the retriever
 retriever = vectorstore.as_retriever(search_kwargs={"k": 5})
 
