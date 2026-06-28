@@ -44,3 +44,21 @@ This project combines a FastAPI-based management system for nonprofits with a RA
    ```bash
    python -m rag.assistant
    ```
+
+## Scraper Automation
+
+The project includes an orchestrator to run multiple scrapers and ingest data into the API.
+
+1. Run all scrapers manually:
+   ```bash
+   python scrapers/orchestrator.py
+   ```
+
+2. Local Automation (Cron):
+   To run scrapers every hour, add this to your `crontab -e`:
+   ```bash
+   0 * * * * cd /path/to/nonprofit-api && ./venv/bin/python scrapers/orchestrator.py >> scraper_cron.log 2>&1
+   ```
+
+3. GitHub Actions:
+   Workflows are located in `.github/workflows/` and can be configured with GitHub Secrets (`INGEST_TOKEN`).
