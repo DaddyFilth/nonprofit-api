@@ -16,6 +16,15 @@ class EmailService:
         self.smtp_password = os.environ.get("SMTP_PASSWORD")
         self.from_email = os.environ.get("FROM_EMAIL", "noreply@nonprofit.org")
         self.from_name = os.environ.get("FROM_NAME", "Nonprofit Organization")
+        # Outreach signature and reply-to per branding rules
+        self.reply_to = os.environ.get("REPLY_TO_EMAIL", "shinelikeacrime@gmail.com")
+        self.signature_block = (
+            "\n—\n"
+            "Michael Yessian\n"
+            "Community Outreach, Lawton OK\n"
+            "Reply-to: shinelikeacrime@gmail.com\n"
+            "Text only: 405-204-1427 (this number is for text communication only)\n"
+        )
     
     async def send_receipt_email(
         self,
@@ -36,6 +45,7 @@ class EmailService:
             message["From"] = f"{self.from_name} <{self.from_email}>"
             message["To"] = to_email
             message["Subject"] = f"Your Donation Receipt #{receipt_number}"
+            message["Reply-To"] = self.reply_to
             
             # Email body
             body = f"""
@@ -52,6 +62,7 @@ If you have any questions, please don't hesitate to contact us.
 
 Warm regards,
 {self.from_name}
+{self.signature_block}
 """
             
             message.attach(MIMEText(body, "plain"))
@@ -92,7 +103,10 @@ Warm regards,
             message["From"] = f"{self.from_name} <{self.from_email}>"
             message["To"] = to_email
             message["Subject"] = subject
-            message.set_content(body)
+            message["Reply-To"] = self.reply_to
+            # Append mandatory signature if not already present
+            body_with_sig = body if self.signature_block.strip() in body else f"{body}\n{self.signature_block}"
+            message.set_content(body_with_sig)
             
             await aiosmtplib.send(
                 message,

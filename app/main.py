@@ -10,6 +10,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from contextlib import asynccontextmanager
 from .db import get_session, engine, Base
 from .routers import donors, donations, receipts, analytics, ui
+from .routers import outreach
 from .schemas.item import ItemIn
 from .services.scheduler_service import SchedulerService
 
@@ -36,6 +37,7 @@ app.include_router(donors.router)
 app.include_router(donations.router)
 app.include_router(receipts.router)
 app.include_router(analytics.router)
+app.include_router(outreach.router)
 
 security = HTTPBearer(auto_error=False)
 

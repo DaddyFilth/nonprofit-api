@@ -1,24 +1,14 @@
-version: '3.8'
+version: "3.9"
 
 services:
   api:
     build: .
+    container_name: nonprofit-api
+    env_file:
+      - .env
     ports:
-      - "8000:8000"
+      - "8001:8000"
     volumes:
-      - ./nonprofit.db:/app/nonprofit.db
-      - ./receipts:/app/receipts
       - ./reports:/app/reports
-      - ./chroma_db:/app/chroma_db
-    environment:
-      - DATABASE_URL=sqlite+aiosqlite:///./nonprofit.db
-      - INGEST_TOKEN=${INGEST_TOKEN:-devtoken}
-      - OPENAI_API_KEY=${OPENAI_API_KEY}
-      - ENABLE_SCHEDULER=true
-      - ADMIN_USERNAME=${ADMIN_USERNAME:-admin}
-      - ADMIN_PASSWORD=${ADMIN_PASSWORD:-password}
+      - ./nonprofit.db:/app/nonprofit.db
     restart: unless-stopped
-
-networks:
-  default:
-    name: nonprofit-network
