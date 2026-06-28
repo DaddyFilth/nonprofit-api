@@ -9,7 +9,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from contextlib import asynccontextmanager
 from .db import get_session
-from .routers import donors, donations, receipts, analytics
+from .routers import donors, donations, receipts, analytics, ui
 from .schemas.item import ItemIn
 from .services.scheduler_service import SchedulerService
 
@@ -26,6 +26,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(title="Nonprofit Ingest API", lifespan=lifespan)
 
 # Include routers
+app.include_router(ui.router)
 app.include_router(donors.router)
 app.include_router(donations.router)
 app.include_router(receipts.router)
