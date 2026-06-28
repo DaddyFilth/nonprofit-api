@@ -43,3 +43,7 @@ ModuleNotFoundError: No module named 'bs4'
 2026-06-28 05:31:43,193 - apscheduler.scheduler - INFO - Added job "main" to job store "default"
 2026-06-28 05:31:43,193 - apscheduler.scheduler - INFO - Scheduler started
 2026-06-28 05:42:00,246 - SchedulerService - INFO - Scheduler is disabled. Set ENABLE_SCHEDULER=true to enable.
+2026-06-28 06:02:35,813 - SchedulerService - INFO - Starting scraper scheduler (Interval: 60m)
+2026-06-28 06:02:35,815 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-06-28 06:02:35,816 - apscheduler.scheduler - INFO - Added job "main" to job store "default"
+2026-06-28 06:02:35,817 - apscheduler.scheduler - INFO - Scheduler started
