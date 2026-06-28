@@ -7,3 +7,6 @@ DATABASE ERROR in dashboard_home: can't compare offset-naive and offset-aware da
 INFO:     127.0.0.1:52860 - "GET /dashboard HTTP/1.1" 200 OK
 INFO:     127.0.0.1:37678 - "GET /dashboard/donors HTTP/1.1" 200 OK
 INFO:     127.0.0.1:40964 - "GET /dashboard/scrapers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55350 - "GET /healthz HTTP/1.1" 200 OK
+DATABASE ERROR in dashboard_home: can't compare offset-naive and offset-aware datetimes
+INFO:     127.0.0.1:55366 - "GET /dashboard HTTP/1.1" 200 OK
