@@ -60,5 +60,8 @@ The project includes an orchestrator to run multiple scrapers and ingest data in
    0 * * * * cd /path/to/nonprofit-api && ./venv/bin/python scrapers/orchestrator.py >> scraper_cron.log 2>&1
    ```
 
-3. GitHub Actions:
-   Workflows are located in `.github/workflows/` and can be configured with GitHub Secrets (`INGEST_TOKEN`).
+3. Integrated Scheduler:
+   The app has a built-in scheduler. Enable it with `ENABLE_SCHEDULER=true`. See [Automation Alternatives](docs/automation-alternatives.md) for details.
+
+4. Systemd Timers (Linux):
+   For a more robust Linux-native automation, see the Systemd guide in [Automation Alternatives](docs/automation-alternatives.md).

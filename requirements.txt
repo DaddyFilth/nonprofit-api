@@ -20,3 +20,6 @@ langgraph
 chromadb
 openai
 gitpython
+
+# Task Scheduling
+apscheduler

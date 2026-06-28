@@ -7,11 +7,23 @@ from pydantic import BaseModel, HttpUrl
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from contextlib import asynccontextmanager
 from .db import get_session
 from .routers import donors, donations, receipts, analytics
 from .schemas.item import ItemIn
+from .services.scheduler_service import SchedulerService
 
-app = FastAPI(title="Nonprofit Ingest API")
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Startup: Start the scraper scheduler
+    scheduler = SchedulerService()
+    scheduler.start()
+    app.state.scheduler = scheduler
+    yield
+    # Shutdown: Clean up scheduler
+    scheduler.shutdown()
+
+app = FastAPI(title="Nonprofit Ingest API", lifespan=lifespan)
 
 # Include routers
 app.include_router(donors.router)
