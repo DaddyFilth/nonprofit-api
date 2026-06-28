@@ -1,0 +1,33 @@
+name: Scrape free items
+
+on:
+  schedule:
+    - cron: "*/30 * * * *"  # every 30 minutes
+  workflow_dispatch:
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+
+    env:
+      INGEST_API_BASE: https://your-api-domain.example.org
+      INGEST_TOKEN: ${{ secrets.INGEST_TOKEN }}
+      # SOURCE_URL: https://example.com/free-stuff
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests beautifulsoup4
+
+      - name: Run scraper
+        run: |
+          python scrapers/scrape_source.py
